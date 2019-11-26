@@ -89,4 +89,5 @@ t_list *mx_sort_list(t_list *lst, bool (*cmp)(void *, void *));
 
 int mx_atoi(const char *str);
 bool mx_isdigit(int c);
+void mx_del_my_arr(char ***arr);
 #endif

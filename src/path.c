@@ -34,23 +34,26 @@ t_list *buildlist(char **myarr) {
 	char **bufarr2 = NULL;
 	int count = 0;
 	t_list *my_list = NULL;
-	
+	char *tmp = NULL;	
 	for (int i = 1; myarr[i] != NULL; i++) {
 		bufarr = mx_strsplit(myarr[i], '-');
 		
 			if (reflectlist(&my_list, bufarr[0]) == 0) {
-				mx_push_back(&my_list, bufarr[0], count);
+				tmp = mx_strdup(bufarr[0]);
+				mx_push_back(&my_list, tmp, count);
 				count++;
 			}
 
 			bufarr2 = mx_strsplit(bufarr[1], ',');
 			if (reflectlist(&my_list, bufarr2[0]) == 0) {
-	        	mx_push_back(&my_list, bufarr2[0], count);
+				tmp =  mx_strdup(bufarr2[0]);
+	        	mx_push_back(&my_list, tmp, count);
 				count++;
 			}
-	}	
-	mx_del_strarr(&bufarr);
-	mx_del_strarr(&bufarr2);
+		
+			mx_del_strarr(&bufarr);
+			mx_del_strarr(&bufarr2);
+		}
 	return my_list;
 }
 
@@ -92,16 +95,77 @@ int **writematrix(t_list *my_list, int **matrix, char **myarr) {
 		
 		matrix[first][second] = count;
 		matrix[second][first] = count;	
-			
+		mx_del_strarr(&bufarr);
+        mx_del_strarr(&bufarr2);	
 	}
 	return matrix;
 }	
+
+int **small_matrix(int **matrix, char **myarr, int iter) {
+	int n = 0;
+    int **small_matrix = NULL;
+    n = mx_atoi(myarr[0]);
+	small_matrix = (int **)malloc(sizeof(int *) *n);
+
+	for (int i = 0; i < 3; i++) {
+		small_matrix[i] = (int *)malloc(sizeof(int) *n);
+	}
+	
+	for (int i = 0; i < 3; i++){
+		for (int j = 0; j < n; j++) {
+			if (i == 0) 
+				small_matrix[i][j] = matrix[iter][j];
+			else 
+				small_matrix[i][j] = 0;
+			}
+	}
+	    for (int i = 0; i < 3; i++) {
+         for (int j = 0; j < 5; j++) {
+            printf("%d   ", small_matrix[i][j]);
+         }
+        printf("\n");
+		printf("\n");
+     }
+	
+	return small_matrix;
+
+}
+
+int findmin(int **small_matrix, int n) {
+	int num = 2147483647;
+	int iter = 0;
+	
+	for (int i = 0; i < n; i++) {
+		if (small_matrix[0][i] < num && small_matrix[0][i] != -1) {
+			num = small_matrix[0][i]
+			iter = i
+		}
+	}
+	return iter;
+}
+
+void find_path(int **matrix, char **myarr) {
+	int n = 0;
+	int **small_mat = NULL;
+	int iter = 0;
+
+	n = mx_atoi(myarr[0]);
+	for (int i = 0; i < n; i++) {
+		small_mat = small_matrix(matrix, myarr, i);
+		iter = findmin(small_matrix, n);
+			
+
+
+
+
+
 
 
 int main() {
 	t_list *my_list = NULL;
 	char **myarr = NULL;
 	int **matrix = NULL;
+	int **small_mat = NULL;
 
 	myarr = mx_strsplit(mx_file_to_str("test"), '\n');
 	
@@ -115,5 +179,6 @@ int main() {
          }
         printf("\n");
      }
+	system("leaks -q a.out");
 	return 0;
 }	
