@@ -84,8 +84,6 @@ int **writematrix(t_list *my_list, int **matrix, char **myarr) {
 	char **bufarr = NULL;
     char **bufarr2 = NULL;
 	
-
-
 	for (int i = 1; myarr[i] != NULL; i++) {
 		bufarr = mx_strsplit(myarr[i], '-');
 		first = mx_find_index(&my_list, bufarr[0]);
@@ -119,13 +117,13 @@ int **small_matrix(int **matrix, char **myarr, int iter) {
 				small_matrix[i][j] = 0;
 			}
 	}
-	    for (int i = 0; i < 3; i++) {
+	   /* for (int i = 0; i < 3; i++) {
          for (int j = 0; j < 5; j++) {
             printf("%d   ", small_matrix[i][j]);
          }
         printf("\n");
-		printf("\n");
-     }
+		printf("\n");*/
+//     }
 	
 	return small_matrix;
 
@@ -137,8 +135,8 @@ int findmin(int **small_matrix, int n) {
 	
 	for (int i = 0; i < n; i++) {
 		if (small_matrix[0][i] < num && small_matrix[0][i] != -1) {
-			num = small_matrix[0][i]
-			iter = i
+			num = small_matrix[0][i];
+			iter = i;
 		}
 	}
 	return iter;
@@ -151,10 +149,52 @@ void find_path(int **matrix, char **myarr) {
 
 	n = mx_atoi(myarr[0]);
 	for (int i = 0; i < n; i++) {
-		small_mat = small_matrix(matrix, myarr, i);
-		iter = findmin(small_matrix, n);
-			
+		small_mat = small_matrix(matrix, myarr, i);	
+		iter = findmin(small_mat, n);
+		
+		printf("%d\n\n", iter);
+		
+		small_mat[0][i] = 0;
+		small_mat[1][i] = i;
+		small_mat[2][i] = 1;
 
+		
+		small_mat[1][iter] = i;
+    //    small_mat[2][i] = 1;
+
+			for (int y = 0; y < n; y++) {
+				if (small_mat[2][y] != 1) {
+					printf("Chhhheeek\n");
+					if (small_mat[0][y] < small_mat[0][iter] + matrix[iter][y])
+// &&
+//						 (small_mat[0][y] != -1 && matrix[iter][y] != -1))
+					 {
+						printf("Chhhheeekkk1\n");
+						small_mat[0][y] = small_mat[0][iter] + matrix[iter][y];
+						small_mat[1][y] = iter;
+						
+	
+					}
+					
+					else
+						small_mat[1][y] = i;
+					
+					}
+			}
+		small_mat[2][iter] = 1;
+
+		for (int i = 0; i < 3; i++) {
+         for (int j = 0; j < 5; j++) {
+            printf("%d   ", small_mat[i][j]);
+         }
+        printf("\n");
+        printf("\n");
+     }				
+			
+		printf("\n");
+        printf("\n");
+	}
+}
 
 
 
@@ -165,7 +205,7 @@ int main() {
 	t_list *my_list = NULL;
 	char **myarr = NULL;
 	int **matrix = NULL;
-	int **small_mat = NULL;
+//	int **small_mat = NULL;
 
 	myarr = mx_strsplit(mx_file_to_str("test"), '\n');
 	
@@ -179,6 +219,10 @@ int main() {
          }
         printf("\n");
      }
+	printf("\n");
+    printf("\n");	
+	
+	find_path(matrix, myarr);
 	system("leaks -q a.out");
 	return 0;
 }	
