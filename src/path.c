@@ -134,7 +134,7 @@ int findmin(int **small_matrix, int n) {
 	int iter = 0;
 	
 	for (int i = 0; i < n; i++) {
-		if (small_matrix[0][i] < num && small_matrix[0][i] != -1) {
+		if (small_matrix[0][i] < num && small_matrix[0][i] != -1 && small_matrix[2][i] != 1) {
 			num = small_matrix[0][i];
 			iter = i;
 		}
@@ -152,7 +152,18 @@ void find_path(int **matrix, char **myarr) {
 		small_mat = small_matrix(matrix, myarr, i);	
 		iter = findmin(small_mat, n);
 		
-		printf("%d\n\n", iter);
+	/*	for (int i = 0; i < 3; i++) {
+         for (int j = 0; j < 5; j++) {
+            printf("%d   ", small_mat[i][j]);
+         }
+        printf("\n");
+        printf("\n");
+     }
+
+        printf("\n");
+        printf("\n");*/
+		
+//		printf("%d\n\n", iter);
 		
 		small_mat[0][i] = 0;
 		small_mat[1][i] = i;
@@ -162,27 +173,66 @@ void find_path(int **matrix, char **myarr) {
 		small_mat[1][iter] = i;
     //    small_mat[2][i] = 1;
 
-			for (int y = 0; y < n; y++) {
+			for (int y = i; y < n; y++) {
+				
+		//		printf("Firssssssssstttttttt\n");		
+				
 				if (small_mat[2][y] != 1) {
-					printf("Chhhheeek\n");
-					if (small_mat[0][y] < small_mat[0][iter] + matrix[iter][y])
+			//		printf("%d      %d     \n ", small_mat[0][y], matrix[iter][y]);
+					if ((small_mat[0][y] != -1 && matrix[iter][y] != -1) || (small_mat[0][y] != -1 || matrix[iter][y] != -1)) {
+		//			printf("Chhhheeek\n");
+						if (small_mat[0][y] > small_mat[0][iter] + matrix[iter][y] || small_mat[0][y] == -1)
 // &&
 //						 (small_mat[0][y] != -1 && matrix[iter][y] != -1))
-					 {
-						printf("Chhhheeekkk1\n");
-						small_mat[0][y] = small_mat[0][iter] + matrix[iter][y];
-						small_mat[1][y] = iter;
-						
-	
-					}
-					
-					else
-						small_mat[1][y] = i;
-					
-					}
-			}
-		small_mat[2][iter] = 1;
+						 {
+							if (matrix[iter][y] != -1) {	
+							//	printf("Chhhheeekkk1\n");
+								small_mat[0][y] = small_mat[0][iter] + matrix[iter][y];
+								small_mat[1][y] = iter;
+							}
+							//else 
+							//	small_mat[1][y] = i;
 
+						}
+					
+				
+					
+					//	else
+					//		small_mat[1][y] = i;
+					
+					}
+
+			}
+				small_mat[2][iter] = 1;
+		
+			/*	for (int i = 0; i < 3; i++) {
+         for (int j = 0; j < 5; j++) {
+            printf("%d   ", small_mat[i][j]);
+         }
+        printf("\n");
+        printf("\n");
+     }
+
+        printf("\n");
+        printf("\n");*/ 
+				if (y == n - 1) { 
+					int flag = 0;
+					for (int z = 0; z < n; z++) {
+						if (small_mat[2][z] != 1) {
+							flag = 1;
+							break;
+						}
+					}
+					if (flag == 1) {
+						y = 0;
+						iter = findmin(small_mat, n);
+					//	printf("%d\n", iter);
+					//	printf("=================================================\n");
+					//	small_mat[1][iter] = i;
+					}
+				}
+						
+		}
 		for (int i = 0; i < 3; i++) {
          for (int j = 0; j < 5; j++) {
             printf("%d   ", small_mat[i][j]);
