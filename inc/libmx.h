@@ -15,6 +15,16 @@ struct s_list *next;
 } t_list;
 
 
+typedef struct my_result 
+{
+int len;
+char *path;
+char *Route;
+char *Distance;
+struct my_result *next;
+} result_list;
+
+
 void mx_printchar(const char c);
 void mx_swap_char(char *s1, char *s2);
 int mx_get_char_index(const char *str, char c);
