@@ -238,7 +238,7 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list *l, t_l
 							printf("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n");
 							
 							second_num = (int *)malloc(sizeof(int)*3);
-							second_num[0] = y+1;
+							second_num[0] = i;
 							second_num[1] =  iter;
 							second_num[2] =  n;
 
@@ -278,6 +278,7 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list *l, t_l
 
 		
          for (int j = i+1; j < n; j++) {
+         	printf("========================================\n");
          	char *one = find_char(list, i);
          	char *two = find_char(list, j);
          	char *delim = " -> ";
@@ -290,64 +291,86 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list *l, t_l
          	char *Route = NULL;
          	char *buf = NULL;
          	char *distance = mx_itoa(small_mat[0][j]);
-         	char *is = "=";
-         	char *plus = "+";
+         	char *is = " = ";
+         	char *plus = " + ";
          	int in = j;
          	char *buf_dis = NULL;
          	int count = 0;
-         	
+         	int point = j;
+         	Route = mx_strjoin(Route, two);
+
+         	//printf("%s\n", Route);
          	while (in != i) {
-         		count = small_mat[1][i];
+         		count = small_mat[1][in];
          		buf = find_char(list, count);
-         		Route = mx_strjoin(buf, Route);
          		Route = mx_strjoin(delim, Route);
+         		Route = mx_strjoin(buf, Route);
 
-         		if(in != count && in == j) {
-         			distance = mx_strjoin(is, distance); 
+         		//printf("     TEST1        =         %s\n\n", Route);
+
+
+         		
+
+         		if(count != i && in == j) {
+         			distance = mx_strjoin(is, distance);
+         			
          		}
 
-         		if(in != count && in != j) {
-         			if (count != iter) {
-		     			buf_dis = mx_itoa(small_mat[0][in]);
-		     			distance = mx_strjoin(buf_dis, distance);
-		     			distance = mx_strjoin(plus, distance);
-         			}
-         			else {
-         				buf_dis = mx_itoa(small_mat[0][in]);
-		     			distance = mx_strjoin(buf_dis, distance);
-         			}
-         		}
+         		if (count != i || (count == i && in != j)) {
+         		buf_dis = mx_itoa(matrix[count][point]);
+         		distance = mx_strjoin(buf_dis, distance);
+         		if (count != i)
+
+         		//if(count != )
+		     	distance = mx_strjoin(plus, distance);
+
+
+		     	point = count;
+		     }
+		     
+         		
+         	//	printf("     TEST        =         %s\n\n", Route);
+         		
 
          		in = count;
+
          	}
-         	 printf("%s\n", path);
+         	//Route = mx_strjoin(Route, one);
+         	//printf("chek");
+         	printf("%s\n", path);
          	printf("%s\n", Route);
          	printf("%s\n", distance);
+         	mx_strdel(&path);
+         	mx_strdel(&Route);
+         	mx_strdel(&distance);
 
 
-         	Route = mx_strjoin(one, Route);
-
-         	}
+         	printf("========================================\n");
 
 
+         	
 
-
-
+        	}
 
 
 
-        for (int i = 0; i < 3; i++) {
-         for (int j = 0; j < 5; j++) {
-            printf("%d   ", small_mat[i][j]);
-
-         }
-        printf("\n");
-        printf("\n");
-     }
 
 
-		printf("\n");
-        printf("\n");
+
+
+
+  //       for (int i = 0; i < 3; i++) {
+  //        for (int j = 0; j < 5; j++) {
+  //           printf("%d   ", small_mat[i][j]);
+
+  //        }
+  //       printf("\n");
+  //       printf("\n");
+  //    }
+
+
+		// printf("\n");
+  //       printf("\n");
 
 
 
@@ -369,7 +392,6 @@ void find_path(int **matrix, char **myarr, t_list **list) {
 		iter = findmin(small_mat, n);
 		for(int q = 0; q < n; q++) {
 			small_mat[1][q] = i;
-			
 		}		
 
 		
@@ -392,22 +414,20 @@ void find_path(int **matrix, char **myarr, t_list **list) {
 
 
 
-
-
 int main() {
 	t_list *my_list = NULL;
 	char **myarr = NULL;
 	int **matrix = NULL;
 //	int **small_mat = NULL;
 
-	myarr = mx_strsplit(mx_file_to_str("test"), '\n');
+	myarr = mx_strsplit(mx_file_to_str("test2"), '\n');
 	
 	
 	my_list = buildlist(myarr);
 	matrix = builmatrix(myarr);
 	matrix = writematrix(my_list, matrix, myarr);
-	 for (int i = 0; i < 5; i++) {
-         for (int j = 0; j < 5; j++) {
+	 for (int i = 0; i < 4; i++) {
+         for (int j = 0; j < 4; j++) {
             printf("%d   ", matrix[i][j]);
          }
         printf("\n");
@@ -416,6 +436,6 @@ int main() {
     printf("\n");	
 	
 	find_path(matrix, myarr, &my_list);
-	//system("leaks -q a.out");
+	system("leaks -q a.out");
 	return 0;
 }	
