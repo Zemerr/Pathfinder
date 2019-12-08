@@ -4,6 +4,17 @@
 
 #include "../inc/libmx.h"
 
+int mx_find_index(t_list **list, char *str) {
+	t_list *buf = *list;
+    while (buf != NULL) {
+        if (mx_strcmp(str, buf->data) == 0) {
+            return buf->count;
+        }
+        buf = buf->next;
+    }
+    return -1;
+}
+
 result_list *create_result(char *path, char *Route, char *distance) {
 	result_list *new = (result_list *)malloc(sizeof(result_list));
 	new->Path = path;
@@ -29,7 +40,7 @@ void mx_push_back_res(result_list **list, char *Route, char *path, char *distanc
 	
 }
 
-void mx_push_onpalce(result_list **list, char *Route, char *path, char *distance) {	
+void mx_push_onpalce(result_list **list, char *Route, char *path, char *distance, t_list **l) {	
 	result_list *node = create_result(path, Route, distance);
     result_list  *buf = *list;
     int flag = 0;
@@ -39,17 +50,68 @@ void mx_push_onpalce(result_list **list, char *Route, char *path, char *distance
 		return;
 	}
     while ( buf->next != NULL) {
-    	if (mx_strcmp(buf->Path, path) == 0) {
-    		flag = -1;    		
-    	}
-    	if (flag == -1) {    		
-    		while (buf->next != NULL && mx_strcmp(buf->next->Path, path) == 0)
+
+    	if ((buf->next != NULL && mx_strcmp(buf->next->Path, path) == 0) || flag == 1) {
+    		flag = 0;
+    		
+    		char *two = mx_strfind(Route, buf->next->Route);
+    		char *one = mx_strfind(buf->next->Route, Route);
+
+    		char **one_p = mx_strsplit(one, ' ');
+    		char **two_p = mx_strsplit(two, ' ');
+
+    		char *one_point = one_p[0];
+    		char *two_point = two_p[0];
+
+    		if (two_p[1] == NULL){
+    			mx_del_strarr(&one_p);
+    			mx_del_strarr(&two_p);
+    			break;
+    		}
+
+    		int firsti = mx_find_index(l, one_point);
+    		int secondi = mx_find_index(l, two_point);
+
+    		mx_del_strarr(&one_p);
+    		mx_del_strarr(&two_p);
+
+    		//printf("%s  -  %d\n", one_point, firsti);
+    		//printf("%s  -  %d\n", two_point, secondi);
+
+    		if (firsti > secondi)
+    				break;
+    		if (firsti < secondi && buf->next->next != NULL && mx_strcmp(buf->next->next->Path, path) == 0)
+    			flag = 1;
+    		else {
     			buf = buf -> next;
-    		break;
+    			break;
+    		}
+
+
+    		
     	}
-        buf = buf -> next;
-        
+    	 buf = buf -> next;
     }
+
+
+
+
+
+    		
+
+    	
+
+    	// 	flag = -1;    		
+    	// }
+    	// if (flag == -1) {    		
+    	// 	while (buf->next != NULL && mx_strcmp(buf->next->Path, path) == 0)
+
+    	// 		buf = buf -> next;
+    	// 	break;
+    	// }
+    //    buf = buf -> next;
+        
+  //  }
     node->next =  buf->next;
     buf->next = node;
 }
@@ -84,16 +146,7 @@ int reflection_result_Path(result_list **list, char *Path) {
 
 
 
-int mx_find_index(t_list **list, char *str) {
-	t_list *buf = *list;
-    while (buf != NULL) {
-        if (mx_strcmp(str, buf->data) == 0) {
-            return buf->count;
-        }
-        buf = buf->next;
-    }
-    return -1;
-}
+
 
 char *find_char(t_list **list, int index) {
 	if (*list == NULL)
@@ -416,7 +469,7 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_
          			mx_push_back_res(l, tmp_Route, tmp_Path, tmp_distance);
          		}
          		else {
-         			mx_push_onpalce(l, tmp_Route, tmp_Path, tmp_distance);
+         			mx_push_onpalce(l, tmp_Route, tmp_Path, tmp_distance, list);
          		}
 
          	}
@@ -534,7 +587,7 @@ int main() {
 	t_list *my_list = NULL;
 	char **myarr = NULL;
 	int **matrix = NULL;
-	char *file = mx_file_to_str("test");
+	char *file = mx_file_to_str("test2");
 //	int **small_mat = NULL;
 
 	myarr = mx_strsplit(file, '\n');
