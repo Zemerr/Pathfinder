@@ -7,6 +7,10 @@
 #include <fcntl.h>
 #include <stdbool.h>
 
+#define DELIM " -> " 
+#define IS " = "
+#define PLUS " + "
+
 
 typedef struct s_list {
 char *data;
@@ -117,4 +121,6 @@ char *mx_strjoin_both( char *s1,  char *s2);
 void mx_del_intarr(int ***arr, int n);
 void mx_freeOutput(result_list **outputList);
 char *mx_strfind (const char *haystack, const char *needle);
+void secod_mat_use(int ***allmat,  int *numbers, result_list **l, t_list **list);
+int findmin(int **small_matrix, int n);
 #endif
