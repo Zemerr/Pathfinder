@@ -25,8 +25,8 @@ result_list *create_result(char *path, char *Route, char *distance) {
 }
 
 
-void mx_push_back_res(result_list **list, char *Route, char *path, char *distance) {	
-    result_list *front = create_result(path, Route, distance);
+void mx_push_back_res(result_list **list, char **info) {	
+    result_list *front = create_result(info[0], info[2], info[1]);
     result_list  *buf = *list;
 	
 	if (buf == 0) {
@@ -40,8 +40,8 @@ void mx_push_back_res(result_list **list, char *Route, char *path, char *distanc
 	
 }
 
-void mx_push_onpalce(result_list **list, char *Route, char *path, char *distance, t_list **l) {	
-	result_list *node = create_result(path, Route, distance);
+void mx_push_onpalce(result_list **list, char **info, t_list **l) {	
+	result_list *node = create_result(info[0], info[2], info[1]);
     result_list  *buf = *list;
     int flag = 0;
 	
@@ -51,11 +51,11 @@ void mx_push_onpalce(result_list **list, char *Route, char *path, char *distance
 	}
     while ( buf->next != NULL) {
 
-    	if ((buf->next != NULL && mx_strcmp(buf->next->Path, path) == 0) || flag == 1) {
+    	if ((buf->next != NULL && mx_strcmp(buf->next->Path, info[0]) == 0) || flag == 1) {
     		flag = 0;
     		
-    		char *two = mx_strfind(Route, buf->next->Route);
-    		char *one = mx_strfind(buf->next->Route, Route);
+    		char *two = mx_strfind(info[2], buf->next->Route);
+    		char *one = mx_strfind(buf->next->Route, info[2]);
 
     		char **one_p = mx_strsplit(one, ' ');
     		char **two_p = mx_strsplit(two, ' ');
@@ -80,7 +80,7 @@ void mx_push_onpalce(result_list **list, char *Route, char *path, char *distance
 
     		if (firsti > secondi)
     				break;
-    		if (firsti < secondi && buf->next->next != NULL && mx_strcmp(buf->next->next->Path, path) == 0)
+    		if (firsti < secondi && buf->next->next != NULL && mx_strcmp(buf->next->next->Path, info[0]) == 0)
     			flag = 1;
     		else {
     			buf = buf -> next;
@@ -273,54 +273,72 @@ int **small_matrix(int **matrix, char **myarr, int iter) {
 int findmin(int **small_matrix, int n) {
 	int num = 2147483647;
 	int iter = 0;
+	int flag = 0;
+	int max_iter = 0;
 	
 	for (int i = 0; i < n; i++) {
 		if (small_matrix[0][i] < num && small_matrix[0][i] != -1 && small_matrix[2][i] != 1) {
 			num = small_matrix[0][i];
 			iter = i;
 		}
+		if (small_matrix[0][i] == -1 && small_matrix[2][i] != 1 && flag == 0) {
+			flag = 1;
+			max_iter = i;
+		}
 	}
+
+	if (num == 2147483647 && flag == 1)
+		iter = max_iter;
 	return iter;
 }
 
-void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_list **list) {
-
+void dextra_mat(int *numbers, result_list **l, t_list **list, int ***allmat) {
 	int i = numbers[0];
 	int iter = numbers[1];
-
- 	//int copy = iter;
-
 	int n =  numbers[2];
-	int **second = NULL;
+	int ***second = NULL;
 	int *second_num = NULL;
-	            for (int y = i; y < n; y++) {
 
-                if (small_mat[2][y] != 1) {
+//	printf("%d  -  first \n ", iter);
 
-                    if ((small_mat[0][y] != -1 && matrix[iter][y] != -1) || (small_mat[0][y] != -1 || matrix[iter][y] != -1)) {
+//	printf("cs");
+	
+
+	            for (int y = 0; y < n; y++) {
+	            //	printf("%d - befor \n", y);
+
+                if (allmat[1][2][y] != 1) {
+                	//printf("%d - after \n", y);
+
+                    if ((allmat[1][0][y] != -1 && allmat[0][iter][y] != -1) || (allmat[1][0][y] != -1 || allmat[0][iter][y] != -1)) {
        
-                        if (small_mat[0][y] > small_mat[0][iter] + matrix[iter][y] || small_mat[0][y] == -1)
+                        if (allmat[1][0][y] > allmat[1][0][iter] + allmat[0][iter][y] || allmat[1][0][y] == -1)
 
                          {
-                            if (matrix[iter][y] != -1) {
+                            if (allmat[0][iter][y] != -1) {
                             
-                                small_mat[0][y] = small_mat[0][iter] + matrix[iter][y];
-                                small_mat[1][y] = iter;
+                                allmat[1][0][y] = allmat[1][0][iter] + allmat[0][iter][y];
+                                allmat[1][1][y] = iter;
+                               // printf("%d  -  test \n", iter);
+                               // printf("%d  -  test \n", allmat[0][iter][y]);
                             }
   
 
                         }
 
-                        if (small_mat[0][y] == small_mat[0][iter] + matrix[iter][y] && small_mat[0][y] != -1 && matrix[iter][y] != -1 && small_mat[1][y] != iter) {
-                        	second = (int **)malloc(sizeof(int *) *n);
+                        if (allmat[1][0][y] == allmat[1][0][iter] + allmat[0][iter][y] && allmat[1][0][y] != -1 && allmat[0][iter][y] != -1 && allmat[1][1][y] != iter) {
+                        	//printf("chel\n");
+                        	second = (int ***)malloc(sizeof(int ***) *n);
+
+                        	second[1] = (int **)malloc(sizeof(int **) *n);
 
 							for (int g = 0; g < 3; g++) {
-								second[g] = (int *)malloc(sizeof(int) *n);
+								second[1][g] = (int *)malloc(sizeof(int) *n);
 							}
 	
 							for (int g = 0; g < 3; g++){
 								for (int j = 0; j < n; j++) {
-									second[g][j] = small_mat[g][j];
+									second[1][g][j] = allmat[1][g][j];
 									
 								}
 
@@ -334,13 +352,17 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_
 							second_num[2] =  n;
 
 							       
-                            second[0][y] = second[0][iter] + matrix[iter][y];
-                            second[1][y] = iter;
+                            second[1][0][y] = second[1][0][iter] + allmat[0][iter][y];
+                            second[1][1][y] = iter;
+
+                            second[0] = allmat[0];
+                            second[2] = allmat[2];
                             
 
-                        	dextra_mat(matrix, second, second_num, l, list);
+                        	dextra_mat(second_num, l, list, second);
                         	//printf("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n\n\n");
                         	free(second_num);
+                        	free(second);
                         	
 
 
@@ -352,31 +374,45 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_
 
             }
            
-                small_mat[2][iter] = 1;
+                allmat[1][2][iter] = 1;
 
 
                 if (y == n - 1) {
                     int flag = 0;
                     for (int z = 0; z < n; z++) {
-                        if (small_mat[2][z] != 1) {
+                        if (allmat[1][2][z] != 1) {
                             flag = 1;
                             break;
                         }
                     }
                     if (flag == 1) {
                         y = 0;
-                        iter = findmin(small_mat, n);
+                        iter = findmin(allmat[1], n);
+                   //   printf("%d - end\n", iter);
                     
                     }
                 }
 
+  //                for (int i = 0; i < 3; i++) {
+  //        for (int j = 0; j < 8; j++) {
+  //           printf("%d   ", allmat[1][i][j]);
+
+  //        }
+  //       printf("\n");
+  //       printf("\n");
+  //    }
+
+
+		// printf("\n");
+  //       printf("\n");
+
         }	
 
-     //   printf("nnnop\n");
-     //   printf("%d\n", i);
+      // printf("nnnop\n");
+      // printf("%d\n", i);
   //        for (int i = 0; i < 3; i++) {
-  //        for (int j = 0; j < 5; j++) {
-  //           printf("%d   ", small_mat[i][j]);
+  //        for (int j = 0; j < n; j++) {
+  //           printf("%d   ", allmat[1][i][j]);
 
   //        }
   //       printf("\n");
@@ -402,7 +438,7 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_
 
          	char *Route = NULL;
          	char *buf = NULL;
-         	char *distance = mx_itoa(small_mat[0][j]);
+         	char *distance = mx_itoa(allmat[1][0][j]);
          	char *is = " = ";
          	char *plus = " + ";
          	int in = j;
@@ -419,7 +455,7 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_
          	//printf("%s\n", Route);
          	while (in != i) {
          		
-         		count = small_mat[1][in];
+         		count = allmat[1][1][in];
          		buf = find_char(list, count);
          		Route = mx_strjoin_two(delim, Route);
          		Route = mx_strjoin_two(buf, Route);
@@ -433,7 +469,7 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_
          		}
 
          		if (count != i || (count == i && in != j)) {
-         			buf_dis = mx_itoa(matrix[count][point]);
+         			buf_dis = mx_itoa(allmat[0][count][point]);
          			distance = mx_strjoin_both(buf_dis, distance);
          			if (count != i)
          		 		distance = mx_strjoin_two(plus, distance);
@@ -453,24 +489,36 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_
 
          	
 
-         	char *tmp_Route =  NULL;
-         	char *tmp_distance =  NULL;
-         	char *tmp_Path = NULL;
+         	// char *tmp_Route =  NULL;
+         	// char *tmp_distance =  NULL;
+         	// char *tmp_Path = NULL;
+         //	char **tmp_info = (char **)malloc(sizeof(char *) *4);
+
 
          	if (reflection_result_Route(l, Route) == 0) {
          	//	printf("Suka2 ");
-         		tmp_Path = mx_strdup(path);
-         		tmp_distance = mx_strdup(distance);
-         		tmp_Route = mx_strdup(Route);
+         		// tmp_Path = mx_strdup(path);
+         		// tmp_distance = mx_strdup(distance);
+         		// tmp_Route = mx_strdup(Route);
+         		char **tmp_info = (char **)malloc(sizeof(char *) *4);
+
+         		tmp_info[0] = mx_strdup(path);
+         		tmp_info[1] = mx_strdup(distance);
+         		tmp_info[2] = mx_strdup(Route);
+         		tmp_info[3] = NULL;
+
          	//	printf("Suka");
          		if (reflection_result_Path(l, path) == 0) {
 
 
-         			mx_push_back_res(l, tmp_Route, tmp_Path, tmp_distance);
+
+         			mx_push_back_res(l, tmp_info);
          		}
          		else {
-         			mx_push_onpalce(l, tmp_Route, tmp_Path, tmp_distance, list);
+         			mx_push_onpalce(l, tmp_info, list);
          		}
+         		
+         		free(tmp_info);
 
          	}
 
@@ -516,8 +564,8 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_
 
 
   //       for (int i = 0; i < 3; i++) {
-  //        for (int j = 0; j < 5; j++) {
-  //           printf("%d   ", small_mat[i][j]);
+  //        for (int j = 0; j < 8; j++) {
+  //           printf("%d   ", allmat[1][i][j]);
 
   //        }
   //       printf("\n");
@@ -529,7 +577,7 @@ void dextra_mat(int **matrix, int **small_mat, int *numbers, result_list **l, t_
   //       printf("\n");
 
 
-mx_del_intarr(&small_mat, 3);
+mx_del_intarr(&allmat[1], 3);
 
 }
 
@@ -543,13 +591,19 @@ void find_path(int **matrix, char **myarr, t_list **list) {
 	result_list *buf = NULL;	
 	int n = mx_atoi(myarr[0]);
 
+	int ***allmat = (int ***)malloc(sizeof(int ***)*3);
+
+
 	for (int i = 0; i < n; i++) {
 		
 		small_mat = small_matrix(matrix, myarr, i);	
 		iter = findmin(small_mat, n);
+
+		//printf("%d", iter);
 		for(int q = 0; q < n; q++) {
 			small_mat[1][q] = i;
 		}		
+
 
 		
 		small_mat[0][i] = 0;
@@ -559,11 +613,19 @@ void find_path(int **matrix, char **myarr, t_list **list) {
 		
 		small_mat[1][iter] = i;
     
-		numbers = (int *)malloc(sizeof(int)*3);
+		numbers = (int *)malloc(sizeof(int)*2);
 		numbers[0] = i;
 		numbers[1] =  iter;
 		numbers[2] =  n;
-		dextra_mat(matrix, small_mat, numbers, &res, list);
+
+		allmat[0] = matrix;
+		allmat[1] = small_mat;
+		
+
+		
+
+
+		dextra_mat( numbers, &res, list, allmat);
 		free(numbers);
 		buf = res;
 		while(buf != NULL) {
@@ -575,9 +637,11 @@ void find_path(int **matrix, char **myarr, t_list **list) {
 			buf = buf->next;
 		}
 		mx_freeOutput(&res);
-		//mx_del_intarr(&small_mat, 3);
+		
 		
 	}
+	
+	free(allmat);
 }
 
 
@@ -587,7 +651,9 @@ int main() {
 	t_list *my_list = NULL;
 	char **myarr = NULL;
 	int **matrix = NULL;
-	char *file = mx_file_to_str("test2");
+	
+	char *file = mx_file_to_str("hardest");
+
 //	int **small_mat = NULL;
 
 	myarr = mx_strsplit(file, '\n');
@@ -596,20 +662,22 @@ int main() {
 	my_list = buildlist(myarr);
 	matrix = builmatrix(myarr);
 	matrix = writematrix(my_list, matrix, myarr);
-	//  for (int i = 0; i < 5; i++) {
- //         for (int j = 0; j < 5; j++) {
- //            printf("%d   ", matrix[i][j]);
- //         }
- //        printf("\n");
- //    }
-	// printf("\n");
- //    printf("\n");	
+	
+	 for (int i = 0; i < 5; i++) {
+         for (int j = 0; j < 5; j++) {
+            printf("%d   ", matrix[i][j]);
+         }
+        printf("\n");
+    }
+	printf("\n");
+    printf("\n");	
 
     // int n = 4;
-    // mx_del_intarr(&matrix, n);
+    //mx_del_intarr(&matrix, 6);
 
 	
 	find_path(matrix, myarr, &my_list);
+	//mx_del_intarr(&matrix, 7);
 	system("leaks -q a.out");
 	return 0;
 }	
