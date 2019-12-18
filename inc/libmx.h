@@ -123,4 +123,9 @@ void mx_freeOutput(result_list **outputList);
 char *mx_strfind (const char *haystack, const char *needle);
 void secod_mat_use(int ***allmat,  int *numbers, result_list **l, t_list **list);
 int findmin(int **small_matrix, int n);
+void mx_printstr_err(const char *s);
+bool mx_digit_str(char *str);
+void mx_printchar_err(char c);
+void mx_printint_err(int n);
+
 #endif

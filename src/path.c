@@ -91,6 +91,8 @@ void push_in_list(result_list *buf, result_list *node, int *arr) {
 }
 
 
+
+
 void mx_push_onpalce(result_list **list, char **info, t_list **l) {	
 	result_list *node = create_result(info[0], info[2], info[1]);
     result_list  *buf = *list;
@@ -100,19 +102,19 @@ void mx_push_onpalce(result_list **list, char **info, t_list **l) {
 		*list  = node;
 		return;
 	}
-    while ( buf->next != NULL) {
+    for ( ; buf->next != NULL; buf = buf -> next) {
     	if ((buf->next != NULL && mx_strcmp(buf->next->Path, info[0]) == 0) || arr[0] == 1) {    		
     		creat_arr_list(info[2], buf->next->Route, l, &arr);
     		if (arr[1] > arr[2] || arr[2] == -1)
     			break;
-    		if (arr[1] < arr[2] && buf->next->next != NULL && mx_strcmp(buf->next->next->Path, info[0]) == 0)
+    		if (arr[1] < arr[2] && buf->next->next != NULL 
+    			&& mx_strcmp(buf->next->next->Path, info[0]) == 0)
     			arr[0] = 1;
     		else {
     			buf = buf -> next;
     			break;
-    		}    		
-    	}
-    	 buf = buf -> next;
+    		}		
+    	}    	
     }
     push_in_list(buf, node, arr);    
 }
@@ -186,6 +188,7 @@ t_list *buildlist(char **myarr) {
 	for (int i = 1; myarr[i] != NULL; i++) {
 		bufarr = mx_strsplit(myarr[i], '-');		
 			if (reflectlist(&my_list, bufarr[0]) == 0) {
+				
 				tmp = mx_strdup(bufarr[0]);
 				mx_push_back(&my_list, tmp, count);
 				count++;
@@ -557,22 +560,107 @@ void find_path(int **matrix, char **myarr, t_list **list, int n) {
 	free(allmat);
 }
 
+bool validation_one(int i) {
+	if (i == 1) {
+		mx_printstr_err("usage: ./pathfinder [filename]\n");
+		return false;
+	}
+	return true;
+}
+
+bool validation_two(char *myarr) {
+	if (myarr == NULL) {
+		mx_printstr_err("error: file islands does not exist\n");
+		return false;
+	}
+	return true;
+}
+
+bool validation_three(char *myarr) {
+	if (mx_strlen(myarr) <= 0) {
+		mx_printstr_err("error: file empty is empty\n");
+		return false;
+	}
+	return true;
+}
+
+bool validation_four(char *file) {
+	char **myarr = mx_strsplit(file, '\n');
+
+	if (!mx_digit_str(myarr[0])) {
+		mx_printstr_err("error: line 1 is not valid\n");
+		mx_del_strarr(&myarr);
+		return false;
+	}
+
+	int count_one = 0;
+	int count_two = 0;
+
+	for(int i = 1; myarr[i] != NULL; i++) {
+		count_one = 0;
+		count_two = 0;
+		for (int j = 0; myarr[i][j] != '\0'; j++) {
+			if (myarr[i][j] == '-') {
+				count_one++;
+				if (count_two > 0) {
+					mx_printstr_err("error: line ");
+					mx_printint_err(i+1);
+					mx_printstr_err(" is not valid\n");
+					mx_del_strarr(&myarr);
+					return false;
+				}
+			}
+			if (myarr[i][j] == ',') 
+				count_two++;
+			}
+			if (count_one != 1 || count_two != 1) {
+				mx_printstr_err("error: line ");
+				mx_printint_err(i+1);
+				mx_printstr_err(" is not valid\n");
+				mx_del_strarr(&myarr);
+				return false;
+			}
+		
+	}
 
 
 
-int main() {
+
+
+
+	mx_del_strarr(&myarr);
+
+	return true;
+
+}
+
+bool allvalid(int i, char *myarr) {
+	if (!validation_one(i) || !validation_two(myarr) || !validation_three(myarr) || !validation_four(myarr)) 
+		return false;
+	return true;
+}
+
+
+
+
+int main(int argc, char **argv ) {
 	t_list *my_list = NULL;
 	char **myarr = NULL;
 	int **matrix = NULL;
-	int n = 0;	
-	char *file = mx_file_to_str("hardest");
+	char *file = NULL;
+	int n = 0;
+	file = mx_file_to_str(argv[1]);
 
-	myarr = mx_strsplit(file, '\n');
-	n = mx_atoi(myarr[0]);	
-	my_list = buildlist(myarr);
-	matrix = builmatrix(myarr);
-	matrix = writematrix(my_list, matrix, myarr);	
-	find_path(matrix, myarr, &my_list, n);
+	printf("%s\n", file);
+
+	if (allvalid(argc, file)) {		
+		myarr = mx_strsplit(file, '\n');
+		n = mx_atoi(myarr[0]);	
+		my_list = buildlist(myarr);
+		matrix = builmatrix(myarr);
+		matrix = writematrix(my_list, matrix, myarr);	
+		find_path(matrix, myarr, &my_list, n);
+	}
 	
 	system("leaks -q a.out");
 	return 0;
