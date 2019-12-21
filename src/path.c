@@ -93,6 +93,8 @@ void push_in_list(result_list *buf, result_list *node, int *arr) {
 
 
 
+
+
 void mx_push_onpalce(result_list **list, char **info, t_list **l) {	
 	result_list *node = create_result(info[0], info[2], info[1]);
     result_list  *buf = *list;
@@ -178,6 +180,7 @@ int reflectlist(t_list **list, char *str) {
 }
 	
 
+
 t_list *buildlist(char **myarr) {
 	char **bufarr = NULL;
 	char **bufarr2 = NULL;
@@ -214,13 +217,11 @@ int **builmatrix(char **str) {
 	for (int i = 0; i < n; i++) {
 		matrix[i] = (int *)malloc(sizeof(int) * n);
 	}
-
 	for (int i = 0; i < n; i++) {
 	    for (int j = 0; j < n; j++) {
 	        matrix[i][j] = -1;
 	     }
 	}
-
 	return matrix;
 }
 	
@@ -245,20 +246,20 @@ int **writematrix(t_list *my_list, int **matrix, char **myarr) {
 	return matrix;
 }	
 
-int **small_matrix(int **matrix, char **myarr, int iter) {
+int **small_matrix(int **matrix, char **myarr, int iter) {	
 	int n = 0;
     int **small_matrix = NULL;
     n = mx_atoi(myarr[0]);
-	small_matrix = (int **)malloc(sizeof(int *) *n);
-
+	small_matrix = (int **)malloc(sizeof(int *) *n+1);	
 	for (int i = 0; i < 3; i++) {
-		small_matrix[i] = (int *)malloc(sizeof(int) *n);
-	}
-	
-	for (int i = 0; i < 3; i++){
-		for (int j = 0; j < n; j++) {
-			if (i == 0) 
+		small_matrix[i] = (int *)malloc(sizeof(int) *n+1);
+	}	
+	for (int i = 0; i < 3; i++){		
+		for (int j = 0; j < n; j++) {			
+			if (i == 0) {
+				//printf("%d       \n", matrix[iter][j]);
 				small_matrix[i][j] = matrix[iter][j];
+			}
 			else 
 				small_matrix[i][j] = 0;
 			}
@@ -294,8 +295,7 @@ void for_dextra_mat_one(int ***allmat, int y, int iter) {
 				|| allmat[1][0][y] == -1)
 
 	     	{
-		        if (allmat[0][iter][y] != -1) {
-		        
+		        if (allmat[0][iter][y] != -1) {		        
 		            allmat[1][0][y] = allmat[1][0][iter] + allmat[0][iter][y];
 		            allmat[1][1][y] = iter;
 	           
@@ -452,10 +452,6 @@ void write_in_list(result_list **l, char **tmp_info, char *path, t_list **list) 
 }
 
 
-
-
-
-
  
 
 void write_result(int *numbers, result_list **l, t_list **list, int ***allmat) {
@@ -472,15 +468,19 @@ void write_result(int *numbers, result_list **l, t_list **list, int ***allmat) {
      	if (reflection_result_Route(l, Route) == 0) {
      		tmp_info = create_tmp_arr(path, distance, Route);
      		write_in_list(l, tmp_info, path, list);     		
-     	}
-     	mx_strdel(&path);
-     	mx_strdel(&Route);
-     	mx_strdel(&distance);
-    }
-	mx_del_intarr(&allmat[1], 3);
+     	}     	 	
+	     	mx_strdel(&path);
+	     	mx_strdel(&Route);
+	     	mx_strdel(&distance);
+    }    
+	mx_del_intarr(&allmat[1], 3);	
 }
 
+void delete_two(char **str1, char **str2) {
+	mx_del_strarr(&str1);
+	mx_del_strarr(&str2);
 
+}
 void free_two(int *second_num, int ***second){
 	free(second_num);
     free(second);
@@ -499,12 +499,12 @@ void dextra_mat(int *numbers, result_list **l, t_list **list, int ***allmat) {
                 	dextra_mat(second_num, l, list, second);                        	
                 	free_two(second_num, second);              
                 }
-            }	       
+            }        
         allmat[1][2][numbers[1]] = 1;
         if (update_cycle(allmat, numbers[2], &y)) {                
                 numbers[1] = findmin(allmat[1], numbers[2]);		                
             }		      
-    }    	
+    }        	
     write_result(numbers, l, list, allmat);
 }
 
@@ -543,16 +543,16 @@ void find_path(int **matrix, char **myarr, t_list **list, int n) {
 	int iter = 0;
 	int *numbers = NULL;
 	result_list *res = NULL;	
-	int ***allmat = (int ***)malloc(sizeof(int ***)*3);
-
-	for (int i = 0; i < n; i++) {		
-		small_mat = small_matrix(matrix, myarr, i);		
-		iter = findmin(small_mat, n);
+	int ***allmat = (int ***)malloc(sizeof(int ***)*2);
+	
+	for (int i = 0; i < n; i++) {				
+		small_mat = small_matrix(matrix, myarr, i);				
+		iter = findmin(small_mat, n);		
 		small_mat = rebuilt_small_mat(small_mat, n, i);
 		numbers = create_dextra_arr(iter, i, n);
 		allmat[0] = matrix;
-		allmat[1] = small_mat;
-		dextra_mat( numbers, &res, list, allmat);
+		allmat[1] = small_mat;		
+		dextra_mat( numbers, &res, list, allmat);		
 		free(numbers);
 		write_list(res);
 		mx_freeOutput(&res);		
@@ -568,9 +568,11 @@ bool validation_one(int i) {
 	return true;
 }
 
-bool validation_two(char *myarr) {
+bool validation_two(char *myarr, char *name) {
 	if (myarr == NULL) {
-		mx_printstr_err("error: file islands does not exist\n");
+		mx_printstr_err("error: file ");
+		mx_printstr_err(name);
+		mx_printstr_err(" does not exist\n");
 		return false;
 	}
 	return true;
@@ -584,15 +586,31 @@ bool validation_three(char *myarr) {
 	return true;
 }
 
-bool validation_four(char *file) {
-	char **myarr = mx_strsplit(file, '\n');
-
-	if (!mx_digit_str(myarr[0])) {
-		mx_printstr_err("error: line 1 is not valid\n");
-		mx_del_strarr(&myarr);
-		return false;
+bool reflect_alpha(char *str) {
+	for (int i = 0; str[i] != '\0'; i++) {
+		if (!mx_isalpha(str[i]))
+			return false;		
 	}
+	return true;
+}
 
+bool reflect_digit(char *str) {
+	for (int i = 0; str[i] != '\0'; i++) {
+		if (!mx_isdigit(str[i]))
+			return false;		
+	}
+	return true;
+}
+
+void print_error_line(int i, char **myarr) {
+	mx_del_strarr(&myarr);
+	mx_printstr_err("error: line ");
+	mx_printint_err(i+1);
+	mx_printstr_err(" is not valid\n");
+
+}
+
+bool valid_delim(char **myarr) {
 	int count_one = 0;
 	int count_two = 0;
 
@@ -603,10 +621,7 @@ bool validation_four(char *file) {
 			if (myarr[i][j] == '-') {
 				count_one++;
 				if (count_two > 0) {
-					mx_printstr_err("error: line ");
-					mx_printint_err(i+1);
-					mx_printstr_err(" is not valid\n");
-					mx_del_strarr(&myarr);
+					print_error_line(i, myarr);
 					return false;
 				}
 			}
@@ -614,28 +629,61 @@ bool validation_four(char *file) {
 				count_two++;
 			}
 			if (count_one != 1 || count_two != 1) {
-				mx_printstr_err("error: line ");
-				mx_printint_err(i+1);
-				mx_printstr_err(" is not valid\n");
-				mx_del_strarr(&myarr);
+				print_error_line(i, myarr);
 				return false;
-			}
-		
+			}		
 	}
-
-
-
-
-
-
-	mx_del_strarr(&myarr);
-
 	return true;
-
 }
 
-bool allvalid(int i, char *myarr) {
-	if (!validation_one(i) || !validation_two(myarr) || !validation_three(myarr) || !validation_four(myarr)) 
+
+
+
+
+bool valid_island(char **myarr) {
+	char **bufarr = NULL;
+	char **bufarr2 = NULL;	
+
+	for (int i = 1; myarr[i] != NULL; i++) {
+		bufarr = mx_strsplit(myarr[i], '-');
+			if (bufarr[1] == NULL ||reflect_alpha(bufarr[0]) == 0) {
+				mx_del_strarr(&bufarr);
+				print_error_line(i, myarr);				
+				return false;				
+			}
+			bufarr2 = mx_strsplit(bufarr[1], ',');
+			if (bufarr2[1] == NULL || reflect_alpha(bufarr2[0]) == 0 || !reflect_digit(bufarr2[1])) {
+				delete_two(bufarr, bufarr2);				
+				print_error_line(i, myarr);
+				return false;
+			}		
+			delete_two(bufarr, bufarr2);
+		}
+	return true;
+} 
+
+bool validation_four(char *file) {
+	
+	char **myarr = mx_strsplit(file, '\n');	
+	
+	if (!mx_digit_str(myarr[0])) {
+		mx_printstr_err("error: line 1 is not valid\n");
+		mx_del_strarr(&myarr);
+		return false;
+	}
+	if (!valid_delim(myarr))
+		return false;	
+	if (!valid_island(myarr))
+		return false;	
+	mx_del_strarr(&myarr);
+	return true;
+}
+
+
+
+bool allvalid(int i, char *myarr, char *name) {
+	if (!validation_one(i) || !validation_two(myarr, name) 
+		|| !validation_three(myarr) || !validation_four(myarr)) 
 		return false;
 	return true;
 }
@@ -649,17 +697,19 @@ int main(int argc, char **argv ) {
 	int **matrix = NULL;
 	char *file = NULL;
 	int n = 0;
-	file = mx_file_to_str(argv[1]);
+	file = mx_file_to_str(argv[1]);	
 
-	printf("%s\n", file);
-
-	if (allvalid(argc, file)) {		
-		myarr = mx_strsplit(file, '\n');
+	if (allvalid(argc, file, argv[1])) {		
+		myarr = mx_strsplit(file, '\n');		
 		n = mx_atoi(myarr[0]);	
-		my_list = buildlist(myarr);
+		my_list = buildlist(myarr);		
+		if (n != mx_list_size(my_list)) {			
+			mx_printstr_err("error: invalid number of islands\n");			
+			return 0;
+		}		
 		matrix = builmatrix(myarr);
-		matrix = writematrix(my_list, matrix, myarr);	
-		find_path(matrix, myarr, &my_list, n);
+		matrix = writematrix(my_list, matrix, myarr);		
+		find_path(matrix, myarr, &my_list, n);		
 	}
 	
 	system("leaks -q a.out");

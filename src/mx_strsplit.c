@@ -12,12 +12,13 @@ char **mx_strsplit(const char *s, char c) {
         return NULL;
     }
 	int word = mx_count_words(s, c);
+	
 	first = s;
 	arr = (char **)malloc(sizeof (char *) * word + 1);
 	
 	for	(int i = 0; first[i] != '\0'; i++) {
 		if ((first[i] == c &&  first[i+1] != c && first[i+1] != '\0') || (i == 0 && first[i] != c))  {
-			if (i != 0)
+			if (i != 0 || (i == 0 && first[i]  == c))
 				i++;
 			count = i;
 			while (first[count]  != c && first[count]  != '\0')
@@ -34,7 +35,6 @@ char **mx_strsplit(const char *s, char c) {
 			l++;
 		}
 	}
-
 	arr[l] = NULL;
 	return arr;
 	

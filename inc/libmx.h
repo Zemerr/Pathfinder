@@ -127,5 +127,6 @@ void mx_printstr_err(const char *s);
 bool mx_digit_str(char *str);
 void mx_printchar_err(char c);
 void mx_printint_err(int n);
+bool mx_isalpha(int c);
 
 #endif
