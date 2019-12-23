@@ -1,4 +1,4 @@
-#include "../inc/libmx.h"
+#include "../inc/pathfinder.h"
 
 
 void mx_del_intarr(int ***arr, int n) {

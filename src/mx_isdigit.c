@@ -1,4 +1,4 @@
-#include "../inc/libmx.h"
+#include "../inc/pathfinder.h"
 
 bool mx_isdigit(int c) {
 

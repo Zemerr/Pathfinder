@@ -1,4 +1,4 @@
-#include "../inc/libmx.h"
+#include "../inc/pathfinder.h"
 
 char *mx_strjoin_one( char *s1,  char *s2) {
     char *res = NULL;

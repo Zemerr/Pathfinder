@@ -1,4 +1,4 @@
-#include "../inc/libmx.h"
+#include "../inc/pathfinder.h"
 
 
 char *mx_strfind (const char *haystack, const char *needle) {	

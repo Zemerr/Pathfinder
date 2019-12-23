@@ -7,26 +7,12 @@
 #include <fcntl.h>
 #include <stdbool.h>
 
-#define DELIM " -> " 
-#define IS " = "
-#define PLUS " + "
-
 
 typedef struct s_list {
 char *data;
 int count;
 struct s_list *next;
 } t_list;
-
-
-typedef struct my_result 
-{
-char *Path;
-char *Route;
-char *Distance;
-struct my_result *next;
-} result_list;
-
 
 void mx_printchar(const char c);
 void mx_swap_char(char *s1, char *s2);
@@ -73,12 +59,7 @@ int mx_count_words(const char *str, char c);
 char *mx_strtrim(const char *str);
 char *mx_del_extra_spaces(const char *str);
 char **mx_strsplit(const char *s, char c);
-
-
-
-
-
-
+char *mx_strjoin( char *s1,  char *s2);
 char *mx_file_to_str(const char *file);
 int mx_read_line(char **lineptr, int buf_size, char delim, const int fd);
 char *mx_replace_substr(const char *str, const char *sub, const char *replace);
@@ -97,36 +78,14 @@ void *mx_memmem(const void *big, size_t big_len, const void *little, size_t litt
 void *mx_memmove(void *dst, const void *src, size_t len);
 void *mx_realloc(void *ptr, size_t size);
 
+
 t_list *mx_create_node(char *data, int count);
-void mx_push_front(t_list **list, void *data);
 void mx_push_back(t_list **list, char *data, int count);
+void mx_push_front(t_list **list, void *data, int count);
+
+
 void mx_pop_front(t_list **head);
 void mx_pop_back(t_list **head);
 int mx_list_size(t_list *list);
 t_list *mx_sort_list(t_list *lst, bool (*cmp)(void *, void *));
-
-
-
-
-int mx_atoi(const char *str);
-bool mx_isdigit(int c);
-
-void mx_del_my_arr(char ***arr);
-
-
-char *mx_strjoin( char *s1,  char *s2);
-char *mx_strjoin_one( char *s1,  char *s2);
-char *mx_strjoin_two( char *s1,  char *s2);
-char *mx_strjoin_both( char *s1,  char *s2);
-void mx_del_intarr(int ***arr, int n);
-void mx_freeOutput(result_list **outputList);
-char *mx_strfind (const char *haystack, const char *needle);
-void secod_mat_use(int ***allmat,  int *numbers, result_list **l, t_list **list);
-int findmin(int **small_matrix, int n);
-void mx_printstr_err(const char *s);
-bool mx_digit_str(char *str);
-void mx_printchar_err(char c);
-void mx_printint_err(int n);
-bool mx_isalpha(int c);
-
 #endif

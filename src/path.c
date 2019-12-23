@@ -1,8 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "../inc/libmx.h"
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include "../inc/libmx.h"
 
-#include "../inc/libmx.h"
+#include "../inc/pathfinder.h"
 
 int mx_find_index(t_list **list, char *str) {
 	t_list *buf = *list;
@@ -190,8 +190,7 @@ t_list *buildlist(char **myarr) {
 
 	for (int i = 1; myarr[i] != NULL; i++) {
 		bufarr = mx_strsplit(myarr[i], '-');		
-			if (reflectlist(&my_list, bufarr[0]) == 0) {
-				
+			if (reflectlist(&my_list, bufarr[0]) == 0) {				
 				tmp = mx_strdup(bufarr[0]);
 				mx_push_back(&my_list, tmp, count);
 				count++;
@@ -603,7 +602,8 @@ bool reflect_digit(char *str) {
 }
 
 void print_error_line(int i, char **myarr) {
-	mx_del_strarr(&myarr);
+	if (myarr != NULL)
+		mx_del_strarr(&myarr);
 	mx_printstr_err("error: line ");
 	mx_printint_err(i+1);
 	mx_printstr_err(" is not valid\n");
@@ -679,11 +679,33 @@ bool validation_four(char *file) {
 	return true;
 }
 
+bool enter_valid(char *file) {
+	int num = 0;
+	int i = 0;
+	
+	for (; file[i] != '\0'; i++) {		
+		if (file[i] == '\n') 
+			num++;		
+		if (file[0] == '\n') {			
+			print_error_line(0, NULL);
+			return false;
+		}
+		if (file[i] == '\n' && file[i+1] == '\n')  {
+			print_error_line(num, NULL);
+			return false;
+		}
+	}
+	if (file[i-1] != '\n') {
+		print_error_line(num, NULL);
+		return false;
+	}
+	return true;
+}
 
-
-bool allvalid(int i, char *myarr, char *name) {
+bool allvalid(int i, char *myarr, char *name, char *file) {
 	if (!validation_one(i) || !validation_two(myarr, name) 
-		|| !validation_three(myarr) || !validation_four(myarr)) 
+		|| !validation_three(myarr) ||
+		 !validation_four(myarr) || !enter_valid(file)) 
 		return false;
 	return true;
 }
@@ -691,7 +713,7 @@ bool allvalid(int i, char *myarr, char *name) {
 
 
 
-int main(int argc, char **argv ) {
+int main(int argc, char **argv) {
 	t_list *my_list = NULL;
 	char **myarr = NULL;
 	int **matrix = NULL;
@@ -699,7 +721,7 @@ int main(int argc, char **argv ) {
 	int n = 0;
 	file = mx_file_to_str(argv[1]);	
 
-	if (allvalid(argc, file, argv[1])) {		
+	if (allvalid(argc, file, argv[1], file)) {		
 		myarr = mx_strsplit(file, '\n');		
 		n = mx_atoi(myarr[0]);	
 		my_list = buildlist(myarr);		
@@ -712,6 +734,6 @@ int main(int argc, char **argv ) {
 		find_path(matrix, myarr, &my_list, n);		
 	}
 	
-	system("leaks -q a.out");
+	system("leaks -q pathfinder");
 	return 0;
 }	

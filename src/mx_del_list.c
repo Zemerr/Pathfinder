@@ -1,4 +1,4 @@
-#include "../inc/libmx.h"
+#include "../inc/pathfinder.h"
 
 void mx_freeOutput(result_list **outputList) {
     while(*outputList) {

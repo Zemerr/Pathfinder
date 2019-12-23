@@ -1,4 +1,4 @@
-#include "../inc/libmx.h"
+#include "../inc/pathfinder.h"
 
 void mx_printint_err(int n) {
 	if ( n == -2147483648)

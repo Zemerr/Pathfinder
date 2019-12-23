@@ -8,9 +8,7 @@ void mx_push_back(t_list **list, char *data, int count) {
 		*list  = front;
 		return;
 	}
-
     while ( buf->next != NULL)
         buf = buf -> next;
     buf -> next = front;
-	
 }
