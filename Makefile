@@ -2,7 +2,7 @@ NAME = pathfinder
 
 LIB = ./libmx/libmx.a
 
-LIBA = libmx.a
+
 
 HEADER = inc/pathfinder.h
 
@@ -23,20 +23,6 @@ SRC = src/mx_atoi.c \
 	src/mx_isalpha.c \
     src/path.c \
 
-SRCS = mx_atoi.c \
-    mx_isdigit.c \
-    mx_strjoin_one.c \
-    mx_strjoin_two.c \
-    mx_strjoin_both.c \
-    mx_del_intarr.c \
-    mx_del_list.c \
-    mx_strfind.c \
-    mx_printstr_err.c \
-    mx_digit_str.c \
-    mx_printchar_err.c \
-    mx_printint_err.c \
-    mx_isalpha.c \
-    path.c \
 
 OUT = mx_atoi.o \
 	mx_isdigit.o \
@@ -60,11 +46,9 @@ INC = inc/pathfinder.h
 all: install clean
 
 install:
-	@make -C libmx install
-	@cp $(SRC) .
-	@cp $(LIB) .	
+	@make -C libmx install		
 	@clang $(CFLAGS) -c $(SRC)
-	@clang $(CFLAGS) $(LIBA) $(OUT) -I $(HEADER) -o $(NAME)
+	@clang $(CFLAGS) $(LIB) $(OUT) -I $(HEADER) -o $(NAME)
 	@mkdir -p obj
 	@cp $(OUT) obj/
 	@rm -rf $(OUT)
@@ -74,14 +58,11 @@ uninstall: clean
 	@rm -rf $(NAME)
 
 
-
 clean:
-	@make -C libmx clean
-	@rm -rf $(SRCS)	
-	@rm -rf $(LIBA)
+	@make -C libmx clean	
 	@rm -rf obj
 
-reinstall: uninstall install clean
+reinstall: uninstall install
 
 
 
