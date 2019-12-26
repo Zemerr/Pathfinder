@@ -129,18 +129,20 @@ INC = inc/libmx.h
 all: install clean
 
 install:
-	@mkdir $(DIROBJ)   
+	@mkdir $(DIROBJ)
 	@clang $(CLANG) -c $(SRC) -I $(INC)
 	@ar -rc $(NAME) $(OUT)
 	@mv $(OUT) $(DIROBJ)
 
-clean:
-	@rm -rf $(DIROBJ)
 
-
-uninstall:
+uninstall: clean
 	@rm -rf $(NAME)
+
+clean:
 	@rm -rf $(DIROBJ)
 	@rm -rf $(OUT)
 
-reinstall:  all
+
+
+reinstall:  uninstall install 
+

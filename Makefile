@@ -22,6 +22,26 @@ SRC = src/mx_atoi.c \
 	src/mx_printint_err.c \
 	src/mx_isalpha.c \
     src/path.c \
+    src/mx_find_path.c \
+    src/mx_create_dextra_arr.c \
+    src/mx_dextra_mat.c \
+    src/mx_free_two.c \
+    src/mx_update_cycle.c \
+    src/mx_findmin.c \
+    src/mx_write_result.c \
+    src/mx_find_char.c \
+    src/mx_create_tmp_arr.c \
+    src/mx_write_in_list.c \
+    src/mx_push_onpalce.c \
+    src/mx_creat_arr_list.c \
+    src/mx_find_index.c \
+    src/mx_create_result.c \
+    src/mx_buildlist.c \
+    src/mx_allvalid.c \
+    src/mx_validation_four.c \
+    src/mx_valid_island.c \
+    src/mx_print_error_line.c \
+
 
 
 OUT = mx_atoi.o \
@@ -38,6 +58,26 @@ OUT = mx_atoi.o \
 	mx_printint_err.o \
 	mx_isalpha.o \
     path.o \
+    mx_find_path.o \
+    mx_create_dextra_arr.o \
+    mx_dextra_mat.o \
+    mx_free_two.o \
+    mx_update_cycle.o \
+    mx_findmin.o \
+    mx_write_result.o \
+    mx_find_char.o \
+    mx_create_tmp_arr.o \
+    mx_write_in_list.o \
+    mx_push_onpalce.o \
+    mx_creat_arr_list.o \
+    mx_find_index.o \
+    mx_create_result.o \
+    mx_buildlist.o \
+    mx_allvalid.o \
+    mx_validation_four.o \
+    mx_valid_island.o \
+    mx_print_error_line.o \
+
 
 CFLAGS = -std=c11 -Werror -Wall -Wextra -Wpedantic
 
