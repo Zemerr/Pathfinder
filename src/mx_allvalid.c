@@ -3,7 +3,7 @@
 
 
 static bool validation_one(int i) {
-	if (i == 1) {
+	if (i != 2) {
 		mx_printstr_err("usage: ./pathfinder [filename]\n");
 		return false;
 	}
@@ -54,10 +54,10 @@ static bool enter_valid(char *file) {
 	return true;
 }
 
-bool mx_allvalid(int i, char *myarr, char *name, char *file) {
+bool mx_allvalid(int i, char *myarr, char *name) {
 	if (!validation_one(i) || !validation_two(myarr, name) 
 		|| !validation_three(myarr, name) ||
-		 !mx_validation_four(myarr) || !enter_valid(file)) 
+		 !mx_validation_four(myarr) || !enter_valid(myarr)) 
 		return false;
 	return true;
 }

@@ -6,10 +6,10 @@ static int find_my_index_two(char *Route_1, char *Route_2, t_list **l) {
 	char *two_point = NULL;
 	int secondi = 0;
 
-	if (two_p[1] == NULL) {
-		mx_del_strarr(&two_p);
-		return -1;
-	}
+	// if (two_p[1] == NULL) {
+	// 	mx_del_strarr(&two_p);
+	// 	return -1;
+	// }
 
 	two_point = two_p[0];
 	secondi = mx_find_index(l, two_point);

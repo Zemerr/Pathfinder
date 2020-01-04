@@ -58,7 +58,7 @@ static int ***create_second_dextra(int ***allmat, int iter, int y, int n) {
     return second;
 }
 
-void mx_dextra_mat(int *numbers, result_list **l, t_list **list, int ***allmat) {
+void mx_dextra_mat(int *numbers, t_result_list **l, t_list **list, int ***allmat) {
 	int ***second = NULL;
 	int *second_num = NULL;
 
@@ -76,7 +76,14 @@ void mx_dextra_mat(int *numbers, result_list **l, t_list **list, int ***allmat) 
         if (mx_update_cycle(allmat, numbers[2], &y)) {                
                 numbers[1] = mx_findmin(allmat[1], numbers[2]);		                
             }		      
-    }        	
+    }
+    // for (int b = 0; b < 3; b++){
+    // 	for (int c = 0; c < numbers[2]; c++)
+    // 		printf("%d    ", allmat[1][b][c]);
+    // 	printf("\n");
+    // } 
+    // printf("\n");
+    // printf("\n");      	
     mx_write_result(numbers, l, list, allmat);
 }
 

@@ -31,8 +31,8 @@ static int **small_matrix(int **matrix, char **myarr, int iter) {
 	return small_matrix;
 }
 
-static void write_list(result_list *res) {
-	result_list *buf = res;
+static void write_list(t_result_list *res) {
+	t_result_list *buf = res;
 	
 	while(buf != NULL) {
 		mx_printstr("========================================\n");
@@ -54,7 +54,7 @@ void mx_find_path(int **matrix, char **myarr, t_list **list, int n) {
 	int **small_mat = NULL;
 	int iter = 0;
 	int *numbers = NULL;
-	result_list *res = NULL;	
+	t_result_list *res = NULL;	
 	int ***allmat = (int ***)malloc(sizeof(int ***)*2);
 	
 	for (int i = 0; i < n; i++) {				

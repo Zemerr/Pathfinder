@@ -58,10 +58,10 @@ static char *Distance_create(int i, int j, int ***allmat){
  	return distance;
 }
 
-static int reflection_result_Route(result_list **list, char *Route) {	
+static int reflection_result_Route(t_result_list **list, char *Route) {	
 	if(*list == NULL)
 		return 0;
-	result_list *buf = *list;
+	t_result_list *buf = *list;
 	while(buf != NULL) {
 		if(mx_strcmp(buf->Route, Route) == 0)
 			return 1;
@@ -71,7 +71,7 @@ static int reflection_result_Route(result_list **list, char *Route) {
 
 }
 
-void mx_write_result(int *numbers, result_list **l, t_list **list, int ***allmat) {
+void mx_write_result(int *numbers, t_result_list **l, t_list **list, int ***allmat) {
 	int i = numbers[0];	
 	char *path = NULL;
 	char *Route = NULL;

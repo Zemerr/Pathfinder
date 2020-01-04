@@ -1,9 +1,9 @@
 #include "../inc/pathfinder.h"
 
-static int reflection_result_Path(result_list **list, char *Path) {	
+static int reflection_result_Path(t_result_list **list, char *Path) {	
 	if(*list == NULL)
 		return 0;
-	result_list *buf = *list;
+	t_result_list *buf = *list;
 	while(buf != NULL) {
 		if(mx_strcmp(buf->Path, Path) == 0)
 			return 1;
@@ -13,9 +13,9 @@ static int reflection_result_Path(result_list **list, char *Path) {
 
 }
 
-static void push_back_res(result_list **list, char **info) {	
-    result_list *front = mx_create_result(info[0], info[2], info[1]);
-    result_list  *buf = *list;
+static void push_back_res(t_result_list **list, char **info) {	
+    t_result_list *front = mx_create_result(info[0], info[2], info[1]);
+    t_result_list  *buf = *list;
 	
 	if (buf == 0) {
 		*list  = front;
@@ -28,7 +28,7 @@ static void push_back_res(result_list **list, char **info) {
 	
 }
 
-void mx_write_in_list(result_list **l, char **tmp_info, char *path, t_list **list) {
+void mx_write_in_list(t_result_list **l, char **tmp_info, char *path, t_list **list) {
 	if (reflection_result_Path(l, path) == 0) {
 		push_back_res(l, tmp_info);
 	}
