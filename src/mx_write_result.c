@@ -71,6 +71,8 @@ static int reflection_result_Route(t_result_list **list, char *Route) {
 
 }
 
+
+
 void mx_write_result(int *numbers, t_result_list **l, t_list **list, int ***allmat) {
 	int i = numbers[0];	
 	char *path = NULL;
@@ -82,14 +84,15 @@ void mx_write_result(int *numbers, t_result_list **l, t_list **list, int ***allm
     	path = path_creat(list, i, j);
        	Route = Route_creat(list, i, j, allmat);
       	distance = Distance_create(i, j, allmat);        
-     	if (reflection_result_Route(l, Route) == 0) {
+     	if (reflection_result_Route(l, Route) == 0) {     		   		     		
      		tmp_info = mx_create_tmp_arr(path, distance, Route);
-     		mx_write_in_list(l, tmp_info, path, list);     		
-     	}     	 	
+     		mx_write_in_list(l, tmp_info, path, list);     		   		
+     	}         	 	 	
 	     	mx_strdel(&path);
 	     	mx_strdel(&Route);
 	     	mx_strdel(&distance);
-    }    
+    }
+
 	mx_del_intarr(&allmat[1], 3);	
 }
 

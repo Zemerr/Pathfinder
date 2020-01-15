@@ -28,13 +28,15 @@ static void push_back_res(t_result_list **list, char **info) {
 	
 }
 
+
+
 void mx_write_in_list(t_result_list **l, char **tmp_info, char *path, t_list **list) {
-	if (reflection_result_Path(l, path) == 0) {
+	if (reflection_result_Path(l, path) == 0) {	
 		push_back_res(l, tmp_info);
 	}
 	else {
-		mx_push_onpalce(l, tmp_info, list);
-	}     		
+		mx_push_onpalce(l, tmp_info, list);	
+	}   		
 	free(tmp_info);
 }
 

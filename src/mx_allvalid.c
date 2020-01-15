@@ -54,7 +54,8 @@ static bool enter_valid(char *file) {
 	return true;
 }
 
-bool mx_allvalid(int i, char *myarr, char *name) {
+bool mx_allvalid(int i, char *myarr, char *name) {	
+
 	if (!validation_one(i) || !validation_two(myarr, name) 
 		|| !validation_three(myarr, name) ||
 		 !mx_validation_four(myarr) || !enter_valid(myarr)) 

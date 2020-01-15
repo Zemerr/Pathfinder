@@ -47,7 +47,8 @@ int main(int argc, char **argv) {
 	char **myarr = NULL;
 	int **matrix = NULL;
 	char *file = NULL;
-	int n = 0;
+	int n = 0;	
+
 	file = mx_file_to_str(argv[1]);	
 
 	if (mx_allvalid(argc, file, argv[1])) {		
@@ -61,6 +62,6 @@ int main(int argc, char **argv) {
 		matrix = builmatrix(myarr);
 		matrix = writematrix(my_list, matrix, myarr);		
 		mx_find_path(matrix, myarr, &my_list, n);		
-	}	
+	}		
 	return 0;
 }	

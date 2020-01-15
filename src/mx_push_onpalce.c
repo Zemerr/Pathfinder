@@ -16,6 +16,8 @@ static void push_in_list(t_result_list *buf, t_result_list *node, int *arr) {
     free(arr);
 }
 
+
+
 static void cycle_list(t_result_list  **buf, int *arr, char **info, t_list **l) {
     for ( ; (*buf)->next != NULL; (*buf) = (*buf) -> next) {
          if (((*buf)->next != NULL && mx_strcmp((*buf)->next->Path, info[0]) == 0) || arr[0] == 1) {           
@@ -37,12 +39,13 @@ void mx_push_onpalce(t_result_list **list, char **info, t_list **l) {
 	t_result_list *node = mx_create_result(info[0], info[2], info[1]);
     t_result_list  *buf = *list;
     int *arr = for_place_list();
+    
 	
 	if (buf == 0) {
 		*list  = node;
 		return;
 	}
     cycle_list(&buf, arr, info, l);
-    push_in_list(buf, node, arr);    
+    push_in_list(buf, node, arr);
 }
 

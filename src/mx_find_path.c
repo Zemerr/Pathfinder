@@ -15,9 +15,10 @@ static int **small_matrix(int **matrix, char **myarr, int iter) {
 	int n = 0;
     int **small_matrix = NULL;
     n = mx_atoi(myarr[0]);
-	small_matrix = (int **)malloc(sizeof(int *) *n+1);	
+	small_matrix = (int **)malloc(sizeof(int *) * n + 1);
+
 	for (int i = 0; i < 3; i++) {
-		small_matrix[i] = (int *)malloc(sizeof(int) *n+1);
+		small_matrix[i] = (int *)malloc(sizeof(int) * n + 1);
 	}	
 	for (int i = 0; i < 3; i++){		
 		for (int j = 0; j < n; j++) {			
@@ -50,6 +51,16 @@ static void write_list(t_result_list *res) {
 		}
 }
 
+static void using_list(t_result_list *res, int *numbers) {    
+        t_result_list *tmp = res->next;
+        free(res);
+        res = tmp;
+        free(numbers);
+		write_list(res);	
+		mx_freeOutput(&res);
+    
+}
+
 void mx_find_path(int **matrix, char **myarr, t_list **list, int n) {	
 	int **small_mat = NULL;
 	int iter = 0;
@@ -57,17 +68,16 @@ void mx_find_path(int **matrix, char **myarr, t_list **list, int n) {
 	t_result_list *res = NULL;	
 	int ***allmat = (int ***)malloc(sizeof(int ***)*2);
 	
-	for (int i = 0; i < n; i++) {				
+	for (int i = 0; i < n; i++) {
 		small_mat = small_matrix(matrix, myarr, i);				
 		iter = mx_findmin(small_mat, n);		
 		small_mat = rebuilt_small_mat(small_mat, n, i);
-		numbers = mx_create_dextra_arr(iter, i, n);
+		numbers = mx_create_dextra_arr(iter, i, n, 0);
 		allmat[0] = matrix;
-		allmat[1] = small_mat;		
-		mx_dextra_mat( numbers, &res, list, allmat);		
-		free(numbers);
-		write_list(res);
-		mx_freeOutput(&res);		
+		allmat[1] = small_mat;
+		res = mx_create_result("HEAD", "HEAD", "HEAD");		
+		mx_dextra_mat(numbers, &res, list, allmat);
+		using_list(res, numbers);		
 	}	
 	free(allmat);
 }

@@ -44,7 +44,7 @@ void mx_printint_err(int n);
 bool mx_isalpha(int c);
 
 void mx_find_path(int **matrix, char **myarr, t_list **list, int n);
-int *mx_create_dextra_arr(int iter, int i, int n);
+int *mx_create_dextra_arr(int iter, int i, int n, int y);
 void mx_dextra_mat(int *numbers, t_result_list **l, t_list **list, int ***allmat);
 void mx_free_two(int *second_num, int ***second);
 bool mx_update_cycle(int ***allmat, int n, int *y);
